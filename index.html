@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LOCOBOT Architect | 2045 Synthesis Engine</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --accent: #ffffff; --bg: #000000; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: #ffffff; margin: 0; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000000; }
+        ::-webkit-scrollbar-thumb { background: #333333; border-radius: 10px; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .glass-heavy { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); }
+        .text-gradient { background: linear-gradient(to bottom right, #ffffff, #888888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        #initial-loader { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10000; transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .loader-ring { width: 60px; height: 60px; border: 2px solid rgba(255,255,255,0.05); border-top-color: #fff; border-radius: 50%; animation: spin 1s infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .markdown-content { font-size: 0.95rem; line-height: 1.7; color: rgba(255,255,255,0.8); }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+    </style>
+
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19.0.0",
+        "react-dom": "https://esm.sh/react-dom@19.0.0",
+        "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+        "marked": "https://esm.sh/marked@15.0.0"
+      }
+    }
+    </script>
+</head>
+<body>
+    <div id="initial-loader">
+        <div class="loader-ring"></div>
+        <div class="mt-8 text-[10px] font-mono tracking-[0.6em] uppercase text-white/30 animate-pulse">Establishing Neural Link</div>
+    </div>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+        import React, { useState, useEffect, useRef } from 'react';
+        import ReactDOM from 'react-dom/client';
+        import { marked } from 'marked';
+
+        // --- Types & Constants ---
+        const ArchitectMode = {
+            WEB: 'WEB',
+            GAMES: 'GAMES',
+            APPS: 'APPS',
+            AUTOMATION: 'AUTOMATION',
+            LEARNING: 'LEARNING'
+        };
+
+        // --- Shared Components ---
+        const GlassCard = ({ children, className = "", onClick, hoverable = true }) => (
+            <div onClick={onClick} className={`glass p-6 rounded-[2rem] transition-all duration-500 ease-out ${hoverable ? 'hover:glass-heavy hover:scale-[1.02] cursor-pointer' : ''} ${className}`}>
+                {children}
+            </div>
+        ); [cite: 160, 161, 162]
+
+        // --- Hero Component ---
+        const Hero = () => (
+            <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 rounded-full blur-[120px] pointer-events-none"></div>
+                <div className="relative mb-8 animate-float">
+                    <svg width="180" height="180" viewBox="0 0 100 100" fill="none" className="drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
+                        <defs>
+                            <linearGradient id="metal" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#FFFFFF" /><stop offset="50%" stopColor="#A1A1A1" /><stop offset="100%" stopColor="#444444" /></linearGradient>
+                        </defs>
+                        <path d="M50 5 L90 25 V75 L50 95 L10 75 V25 L50 5Z" stroke="url(#metal)" strokeWidth="2" fill="rgba(255,255,255,0.05)" />
+                        <path d="M50 15 L80 30 V70 L50 85 L20 70 V30 L50 15Z" fill="url(#metal)" />
+                        <circle cx="50" cy="50" r="12" fill="#000000" />
+                    </svg>
+                </div>
+                <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tighter text-gradient leading-none">LOCOBOT<br/>ARCHITECT</h1>
+                <p className="max-w-2xl text-lg md:text-xl text-zinc-400 font-light mb-12 px-4 leading-relaxed">
+                    The ultimate creation engine from <span className="text-white font-medium">2045</span>. [cite: 167, 168]
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <button onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })} className="px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-zinc-200 transition-colors text-sm uppercase tracking-widest">Initialize Command Center</button>
+                </div>
+            </section>
+        ); [cite: 163, 164, 165, 166, 170]
+
+        // --- Command Center Component ---
+        const CommandCenter = ({ onSelectMode, activeMode }) => {
+            const tools = [
+                { id: ArchitectMode.WEB, title: 'Web Architect', desc: 'Next.js 14, Supabase, Stripe', icon: '🌐', colSpan: 'md:col-span-2', rowSpan: 'md:row-span-2', color: 'from-blue-500/20 to-transparent' },
+                { id: ArchitectMode.GAMES, title: 'Game Engine', desc: 'High-Fidelity Scaffolding', icon: '🎮', colSpan: 'md:col-span-1', rowSpan: 'md:row-span-1', color: 'from-purple-500/20 to-transparent' },
+                { id: ArchitectMode.APPS, title: 'App Forge', desc: 'iOS & Android Native Systems', icon: '📱', colSpan: 'md:col-span-1', rowSpan: 'md:row-span-1', color: 'from-emerald-500/20 to-transparent' },
+                { id: ArchitectMode.AUTOMATION, title: 'Neural Automation', desc: 'Python/Node Local Scripts', icon: '🤖', colSpan: 'md:col-span-1', rowSpan: 'md:row-span-1', color: 'from-orange-500/20 to-transparent' },
+                { id: ArchitectMode.LEARNING, title: 'Omni-Mentor', desc: 'Step-by-Step Interactive', icon: '🎓', colSpan: 'md:col-span-1', rowSpan: 'md:row-span-1', color: 'from-pink-500/20 to-transparent' }
+            ]; [cite: 102, 103, 104, 105]
+
+            return (
+                <div className="max-w-7xl mx-auto px-4 py-20" id="command-center-header">
+                    <div className="flex items-center justify-between mb-12">
+                        <div><h2 className="text-4xl font-bold tracking-tight mb-2">Command Center</h2><p className="text-zinc-500">Select a synthesis module.</p></div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[200px]">
+                        {tools.map((tool) => (
+                            <GlassCard key={tool.id} onClick={() => onSelectMode(tool.id)} className={`${tool.colSpan} ${tool.rowSpan} relative group overflow-hidden ${activeMode === tool.id ? 'ring-2 ring-white scale-[1.02]' : ''}`}>
+                                <div className={`absolute inset-0 bg-gradient-to-br ${tool.color} opacity-0 group-hover:opacity-100 transition-opacity duration-700`}></div>
+                                <div className="relative h-full flex flex-col justify-between">
+                                    <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">{tool.icon}</div>
+                                    <div><h3 className="text-2xl font-bold mb-1">{tool.title}</h3><p className="text-zinc-500 text-sm">{tool.desc}</p></div>
+                                </div>
+                            </GlassCard>
+                        ))}
+                    </div>
+                </div>
+            ); [cite: 106, 108, 110, 111, 113]
+        };
+
+        // --- Generation Console Component ---
+        const GenerationConsole = ({ mode }) => {
+            const [prompt, setPrompt] = useState('');
+            const [isGenerating, setIsGenerating] = useState(false);
+            const [result, setResult] = useState(null);
+            const [viewMode, setViewMode] = useState('blueprint');
+            const [logs, setLogs] = useState([]);
+            const scrollRef = useRef(null);
+
+            const modeConfig = {
+                [ArchitectMode.WEB]: { placeholder: "Design a luxury real estate dashboard...", color: "text-blue-400" },
+                [ArchitectMode.GAMES]: { placeholder: "Create a neon-synthwave shooter...", color: "text-purple-400" },
+                [ArchitectMode.APPS]: { placeholder: "Build a health tracking app...", color: "text-emerald-400" },
+                [ArchitectMode.AUTOMATION]: { placeholder: "Write an uptime script...", color: "text-orange-400" },
+                [ArchitectMode.LEARNING]: { placeholder: "Teach me 3D rendering...", color: "text-pink-400" },
+            }; [cite: 118, 119]
+
+            const handleGenerate = async () => {
+                if (!prompt.trim()) return;
+                setIsGenerating(true);
+                setLogs(["Synchronizing with Neosynthetic Neural Hub...", "Sampling 2045 Design Trends...", "Synthesizing Single-File Runtime..."]);
+                // Simulating API call since geminiService is local
+                setTimeout(() => {
+                    setResult("# Synthesis Complete\n```html\n<h1>Hello from 2045</h1>\n```");
+                    setLogs(prev => [...prev, "Synthesis successful.", "Execution environment ready."]);
+                    setIsGenerating(false);
+                }, 2000);
+            }; [cite: 121, 122, 123, 126]
+
+            return (
+                <div className="max-w-7xl mx-auto px-4 pb-40">
+                    <GlassCard hoverable={false} className="mb-10 border border-white/10">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className={`w-2.5 h-2.5 rounded-full bg-current ${modeConfig[mode].color} animate-pulse shadow-[0_0_15px_currentColor]`}></div>
+                            <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${modeConfig[mode].color}`}>Synthesis Engine: {mode} Mode</span>
+                        </div>
+                        <div className="relative">
+                            <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder={modeConfig[mode].placeholder} className="w-full h-48 bg-white/[0.02] border border-white/10 rounded-3xl p-8 text-2xl focus:outline-none focus:ring-1 focus:ring-white/20 transition-all resize-none font-light" />
+                            <button onClick={handleGenerate} disabled={isGenerating || !prompt} className={`absolute bottom-8 right-8 px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${isGenerating || !prompt ? 'bg-zinc-900 text-zinc-700' : 'bg-white text-black shadow-2xl hover:scale-105'}`}>
+                                {isGenerating ? 'Synthesizing...' : 'Snythesize Build'}
+                            </button>
+                        </div>
+                    </GlassCard>
+                    {(logs.length > 0 || result) && (
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-[600px]">
+                            <GlassCard hoverable={false} className="lg:col-span-3 flex flex-col border border-white/10 overflow-hidden">
+                                <h4 className="text-[10px] font-mono uppercase tracking-[0.4em] text-zinc-600 mb-6 border-b border-white/5 pb-4">Neural Logs</h4>
+                                <div className="flex-1 overflow-y-auto font-mono text-[11px] space-y-3 text-zinc-500">
+                                    {logs.map((log, i) => <div key={i}>[{i.toString().padStart(2, '0')}] {log}</div>)}
+                                </div>
+                            </GlassCard>
+                            <GlassCard hoverable={false} className="lg:col-span-9 flex flex-col p-0 overflow-hidden border border-white/10">
+                                <div className="flex-1 overflow-y-auto bg-black/20 p-10">
+                                    {result ? <div className="markdown-content" dangerouslySetInnerHTML={{ __html: marked.parse(result) }} /> : <div className="flex items-center justify-center h-full text-zinc-800 font-mono text-[11px] uppercase tracking-widest">Workbench Idle</div>}
+                                </div>
+                            </GlassCard>
+                        </div>
+                    )}
+                </div>
+            ); [cite: 134, 135, 138, 139, 140, 153, 158]
+        };
+
+        // --- Main App Component ---
+        const App = () => {
+            const [activeMode, setActiveMode] = useState(null);
+
+            useEffect(() => {
+                const loader = document.getElementById('initial-loader');
+                if (loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 800);
+                }
+            }, []); [cite: 91]
+
+            const handleSelectMode = (mode) => {
+                setActiveMode(mode);
+                setTimeout(() => {
+                    document.getElementById('generation-console')?.scrollIntoView({ behavior: 'smooth' });
+                }, 50);
+            }; [cite: 92, 93]
+
+            return (
+                <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black">
+                    <Hero />
+                    <CommandCenter activeMode={activeMode} onSelectMode={handleSelectMode} />
+                    {activeMode && <div id="generation-console" className="scroll-mt-12"><GenerationConsole mode={activeMode} /></div>}
+                    <nav className="fixed bottom-10 left-1/2 -translate-x-1/2 glass px-10 py-5 rounded-full flex items-center gap-12 z-50 shadow-2xl border border-white/10">
+                        <span className="text-[10px] font-black tracking-[0.4em] uppercase">LOCOBOT_45</span>
+                        <div className="flex gap-8">
+                            <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-[10px] uppercase font-black text-zinc-500 hover:text-white transition-all">Home</button>
+                        </div>
+                    </nav>
+                </div>
+            ); [cite: 94, 95, 96, 99]
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />); [cite: 173, 174]
+    </script>
+</body>
+</html>
