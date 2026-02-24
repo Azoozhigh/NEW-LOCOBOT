@@ -3,6 +3,31 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LOCOBOT Architect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        body { background-color: #000; color: #fff; font-family: sans-serif; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // كود الـ React بتاعك هنا
+        const App = () => <h1>LOCOBOT Active</h1>;
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LOCOBOT Architect | Neural Synthesis</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -72,7 +97,7 @@
             const handleSynthesize = async () => {
                 let key = localStorage.getItem('LOCO_KEY');
                 if (!key) {
-                    key = prompt("يا معلم، دخل الـ API Key بتاع Gemini:");
+                    key = prompt(" AIzaSyCSfCoVp2AH4T0LuPPyt_1SHZuC_kwoUqQ ");
                     if (key) localStorage.setItem('LOCO_KEY', key);
                     else return;
                 }
@@ -153,3 +178,4 @@
     </script>
 </body>
 </html>
+
